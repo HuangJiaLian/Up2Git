@@ -1,16 +1,16 @@
 # Up2Git - GitHub File Uploader
 
 <p align="center">
-  <img src="icons/icon_cloud_upload.png" alt="Up2Git Logo" width="128" height="128">
+  <img src="icon_variant2_improved.svg" alt="Up2Git Logo" width="128" height="128">
 </p>
 
 <p align="center">
-  <strong>A fast and elegant Linux application for uploading files to GitHub and getting shareable URLs instantly.</strong>
+  <strong>A simple, lightweight system tray application for Linux that uploads clipboard content and files directly to GitHub repositories.</strong>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/platform-Linux-blue" alt="Platform: Linux">
-  <img src="https://img.shields.io/badge/python-3.8+-green" alt="Python 3.8+">
+  <img src="https://img.shields.io/badge/python-3.11+-green" alt="Python 3.11+">
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT">
 </p>
 
@@ -18,14 +18,13 @@
 
 ## ✨ Features
 
-- 🚀 **Lightning Fast**: Upload images and files with a single keyboard shortcut
-- 📋 **Auto-Copy URLs**: File URLs are automatically copied to your clipboard
-- ⌨️ **Global Hotkey**: Press `Alt+Shift+U` from anywhere to upload clipboard content
-- 🎯 **System Tray**: Runs quietly in the background with an elegant cloud icon
-- � **Smart Notifications**: Get notified when uploads complete
-- 📁 **Multiple Sources**: Upload from clipboard, file dialog, or drag & drop file paths
-- 🌐 **GitHub Integration**: Direct integration with your GitHub repositories
-- 🎨 **Beautiful Icons**: Three professionally designed icon styles to choose from
+- �️ **Clipboard Upload**: Upload images and text from clipboard with a single hotkey
+- � **File Upload**: Upload any file through a simple file dialog
+- ⌨️ **Keyboard Shortcuts**: Configurable global hotkey (default: Alt+Shift+U)
+- 🚀 **System Tray Integration**: Runs quietly in the background
+- 🔄 **Auto-start**: Optional system startup integration
+- ⚙️ **Easy Configuration**: Simple settings dialog for GitHub credentials
+- � **Direct URLs**: Automatically copies shareable GitHub URLs to clipboard
 
 ## 🖼️ Perfect for:
 
@@ -39,9 +38,9 @@
 
 ### Prerequisites
 
-- **Linux Mint** (or any Linux distribution with system tray support)
-- **Python 3.8+**
-- **Conda** (Miniconda or Anaconda)
+- **Linux** (tested on Linux Mint)
+- **Python 3.11+**
+- **Conda** (recommended) or pip
 
 ### Quick Setup
 
@@ -51,13 +50,19 @@
    cd Up2Git
    ```
 
-2. **Run the automated setup:**
+2. **Create conda environment:**
    ```bash
-   chmod +x tools/setup.sh
-   ./tools/setup.sh
+   conda create -n up2git python=3.11
+   conda activate up2git
    ```
 
-3. **Configure your GitHub credentials:**
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Configure your GitHub credentials:**
+   Create a `.env` file:
    ```bash
    nano .env
    ```
@@ -69,15 +74,9 @@
    BASE_BRANCH=main
    ```
 
-4. **Test your configuration:**
-   ```bash
-   conda activate up2git
-   python tools/test_config.py
-   ```
-
 5. **Start the application:**
    ```bash
-   ./up2git.sh
+   python up2git_unified.py
    ```
 
 ## 🔧 GitHub Token Setup
@@ -93,11 +92,23 @@
 
 Set up the global keyboard shortcut in your system:
 
-1. Open **System Settings → Keyboard → Shortcuts → Custom Shortcuts**
-2. Add a new shortcut:
-   - **Name**: `Up2Git Upload`
-   - **Command**: `/full/path/to/Up2Git/src/trigger_upload.sh`
-   - **Shortcut**: `Alt+Shift+U`
+1. **Make the trigger script executable:**
+   ```bash
+   chmod +x trigger_shortcut.sh
+   ```
+
+2. **Set up system keyboard shortcut:**
+   - Go to System Settings → Keyboard → Shortcuts
+   - Add custom shortcut with command: `/full/path/to/Up2Git/trigger_shortcut.sh`
+   - Assign Alt+Shift+U (or your preferred combination)
+
+### Auto-start Setup
+
+Enable automatic startup with your system:
+```bash
+chmod +x setup_autostart.sh
+./setup_autostart.sh
+```
 
 ## 🚀 Usage
 
@@ -121,40 +132,16 @@ Set up the global keyboard shortcut in your system:
 
 ```
 Up2Git/
-├── src/
-│   ├── main.py              # Main application
-│   ├── run.sh              # Launcher script
-│   └── trigger_upload.sh   # Global shortcut trigger
-├── icons/
-│   ├── icon_cloud_upload.png    # Cloud style icon
-│   ├── icon_folder_upload.png   # Folder style icon
-│   └── icon_upload_circle.png   # Circle style icon
-├── tools/
-│   ├── create_icons.py     # Icon generation script
-│   ├── test_config.py      # Configuration tester
-│   └── setup.sh           # Automated setup script
-├── docs/
-│   └── screenshots/        # Application screenshots
-├── .env.example           # Environment template
-├── .gitignore            # Git ignore rules
-├── requirements.txt      # Python dependencies
-└── README.md            # This file
-```
-
-## 🎨 Icon Styles
-
-Choose from three beautiful icon styles:
-
-| Cloud Upload | Folder Upload | Circle Upload |
-|:------------:|:-------------:|:-------------:|
-| ![Cloud](icons/icon_cloud_upload.png) | ![Folder](icons/icon_folder_upload.png) | ![Circle](icons/icon_upload_circle.png) |
-| Default - Represents cloud storage | Professional folder style | GitHub-style circular design |
-
-To change icons:
-```bash
-# Copy your preferred icon style to the main icon location
-cp icons/icon_folder_upload.png icons/icon_cloud_upload.png  # Use folder style
-cp icons/icon_upload_circle.png icons/icon_cloud_upload.png  # Use circle style
+├── up2git_unified.py          # Main application
+├── trigger.py                 # Trigger file creator
+├── trigger_shortcut.sh        # Keyboard shortcut wrapper
+├── autostart.sh              # System startup script
+├── setup_autostart.sh        # Autostart installer
+├── up2git-autostart.desktop  # Desktop entry for autostart
+├── icon_variant2_improved.svg # Custom application icon
+├── requirements.txt          # Python dependencies
+├── .env.example             # Environment variables template
+└── README.md               # This file
 ```
 
 ## 🔧 Configuration
@@ -168,6 +155,14 @@ cp icons/icon_upload_circle.png icons/icon_cloud_upload.png  # Use circle style
 | `UPLOAD_FOLDER` | Folder in repo for uploads | `uploads` |
 | `BASE_BRANCH` | Target branch | `main` or `master` |
 
+### Settings Dialog
+
+Access via right-click menu → Settings to configure:
+- GitHub Token
+- Repository
+- Upload Folder
+- Branch
+
 ### Generated URLs
 
 Files are uploaded to GitHub and accessible via:
@@ -177,27 +172,41 @@ https://raw.githubusercontent.com/username/repository/branch/folder/filename
 
 Perfect for markdown: `![image](https://raw.githubusercontent.com/...)`
 
+## 📄 Supported File Types
+
+- **Images**: PNG, JPG, GIF, BMP (from clipboard or files)
+- **Text**: Any text content from clipboard
+- **Files**: Any file type through file dialog
+
 ## 🐛 Troubleshooting
 
 ### Common Issues
 
 **Icon not showing in system tray:**
-- Restart the application: `pkill -f "python.*main.py" && ./up2git.sh`
+- Restart the application: `python up2git_unified.py`
 - Check if system tray is enabled in your desktop environment
 
 **Upload fails:**
 - Verify your GitHub token has `repo` scope
 - Check if the repository exists and you have write access
-- Run `python tools/test_config.py` to diagnose issues
+- Check your `.env` file configuration
 
 **Keyboard shortcut not working:**
-- Ensure `src/trigger_upload.sh` is executable: `chmod +x src/trigger_upload.sh`
+- Ensure `trigger_shortcut.sh` is executable: `chmod +x trigger_shortcut.sh`
 - Use absolute path in keyboard shortcut settings
 - Verify the application is running
 
-**Notifications not showing:**
-- Install `python3-dbus`: `sudo apt install python3-dbus`
-- Notifications will fall back to system tray messages
+**Dependencies missing:**
+- Run `pip install -r requirements.txt` in your conda environment
+- Make sure you activated the conda environment: `conda activate up2git`
+
+### Debug Mode
+
+Run from terminal to see debug output:
+```bash
+conda activate up2git
+python up2git_unified.py
+```
 
 ## 🤝 Contributing
 
