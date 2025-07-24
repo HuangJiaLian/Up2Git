@@ -1,11 +1,11 @@
 # Up2Git - GitHub File Uploader
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/HuangJiaLian/Up2Git/refs/heads/main/icons/icon_variant2_improved.svg" alt="Up2Git Logo" width="128" height="128">
+  <img src="https://raw.githubusercontent.com/HuangJiaLian/Up2Git/refs/heads/main/icons/icon.svg" alt="Up2Git Logo" width="128" height="128">
 </p>
 
 <p align="center">
-  <strong>A simple, lightweight system tray application for Linux that uploads clipboard content and files directly to GitHub repositories.</strong>
+  <strong>A lightweight system tray application for Linux that provides seamless file and clipboard content uploads to GitHub repositories.</strong>
 </p>
 
 <p align="center">
@@ -16,18 +16,18 @@
 
 ---
 
-## ✨ Features
+## Features
 
-- 🖼️ **Clipboard Upload**: Upload images and text from clipboard with a single hotkey
-- 📁 **File Upload**: Upload any file through a simple file dialog
-- ⌨️ **Keyboard Shortcuts**: Configurable global hotkey (default: Alt+Shift+U)
-- 🚀 **System Tray Integration**: Runs quietly in the background
-- 🔄 **Auto-start**: Optional system startup integration
-- ⚙️ **Easy Configuration**: Simple settings dialog for GitHub credentials
-- 🎯 **Direct URLs**: Automatically copies shareable GitHub URLs to clipboard
+- **Clipboard Upload**: Upload images and text from clipboard with configurable hotkey
+- **File Upload**: Upload any file type through integrated file dialog
+- **Keyboard Shortcuts**: Global hotkey support (default: Alt+Shift+U)
+- **System Tray Integration**: Minimal background operation with system tray interface
+- **Auto-start Support**: Optional automatic startup with system boot
+- **Configuration Management**: Simple settings dialog for GitHub credentials
+- **Direct URL Generation**: Automatic generation of shareable GitHub raw URLs
 
 
-## 🖼️ Perfect for:
+## Use Cases
 
 - **Markdown Documentation**: Instantly get URLs for images in your docs
 - **Blog Posts**: Quick image hosting for articles and tutorials
@@ -35,7 +35,7 @@
 - **Academic Papers**: Host diagrams and figures
 - **Technical Documentation**: Quick file sharing for teams
 
-## 📦 Installation
+## Installation
 
 ### Prerequisites
 
@@ -80,16 +80,16 @@
    python up2git_unified.py
    ```
 
-## 🔧 GitHub Token Setup
+## GitHub Token Setup
 
 1. Go to [GitHub Settings → Developer settings → Personal access tokens](https://github.com/settings/tokens)
 2. Click **"Generate new token (classic)"**
 3. Set expiration and select **"repo"** scope
 4. Copy the generated token to your `.env` file
 
-⚠️ **Security Note**: Never share your GitHub token publicly. The `.env` file is already in `.gitignore`.
+**Security Note**: Never share your GitHub token publicly. The `.env` file is already in `.gitignore`.
 
-## 🎹 Keyboard Shortcut Setup
+## Keyboard Shortcut Setup
 
 Set up the global keyboard shortcut in your system:
 
@@ -111,7 +111,7 @@ chmod +x setup_autostart.sh
 ./setup_autostart.sh
 ```
 
-## 🚀 Usage
+## Usage
 
 ### Quick Upload (Recommended)
 1. Copy an image to clipboard (screenshot, copy image from browser, etc.)
@@ -129,7 +129,7 @@ chmod +x setup_autostart.sh
 - **Settings...** - Configure GitHub settings
 - **Quit** - Close the application
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Up2Git/
@@ -139,13 +139,14 @@ Up2Git/
 ├── autostart.sh              # System startup script
 ├── setup_autostart.sh        # Autostart installer
 ├── up2git-autostart.desktop  # Desktop entry for autostart
-├── icon_variant2_improved.svg # Custom application icon
+├── icons/
+│   └── icon.svg              # Application icon (transparent SVG)
 ├── requirements.txt          # Python dependencies
 ├── .env.example             # Environment variables template
 └── README.md               # This file
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables (.env)
 
@@ -173,13 +174,13 @@ https://raw.githubusercontent.com/username/repository/branch/folder/filename
 
 Perfect for markdown: `![image](https://raw.githubusercontent.com/...)`
 
-## 📄 Supported File Types
+## Supported File Types
 
 - **Images**: PNG, JPG, GIF, BMP (from clipboard or files)
 - **Text**: Any text content from clipboard
 - **Files**: Any file type through file dialog
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -209,7 +210,7 @@ conda activate up2git
 python up2git_unified.py
 ```
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -219,11 +220,11 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built with [PyQt5](https://www.riverbankcomputing.com/software/pyqt/) for the GUI
 - Icons created with [Pillow](https://python-pillow.org/)
