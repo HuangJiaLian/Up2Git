@@ -1,12 +1,4 @@
-# Up2Git - GitHub ## ✨ Features
-
-- 🖼️ **Clipboard Upload**: Upload images and text from clipboard with a single hotkey
-- 📁 **File Upload**: Upload any file through a simple file dialog
-- ⌨️ **Keyboard Shortcuts**: Configurable global hotkey (default: Alt+Shift+U)
-- 🚀 **System Tray Integration**: Runs quietly in the background
-- 🔄 **Auto-start**: Optional system startup integration
-- ⚙️ **Easy Configuration**: Simple settings dialog for GitHub credentials
-- 🎯 **Direct URLs**: Automatically copies shareable GitHub URLs to clipboardader
+# Up2Git - GitHub File Uploader
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/HuangJiaLian/Up2Git/main/icon_variant2_improved.svg" alt="Up2Git Logo" width="128" height="128">
@@ -26,13 +18,14 @@
 
 ## ✨ Features
 
-- �️ **Clipboard Upload**: Upload images and text from clipboard with a single hotkey
-- � **File Upload**: Upload any file through a simple file dialog
+- 🖼️ **Clipboard Upload**: Upload images and text from clipboard with a single hotkey
+- 📁 **File Upload**: Upload any file through a simple file dialog
 - ⌨️ **Keyboard Shortcuts**: Configurable global hotkey (default: Alt+Shift+U)
 - 🚀 **System Tray Integration**: Runs quietly in the background
 - 🔄 **Auto-start**: Optional system startup integration
 - ⚙️ **Easy Configuration**: Simple settings dialog for GitHub credentials
-- � **Direct URLs**: Automatically copies shareable GitHub URLs to clipboard
+- 🎯 **Direct URLs**: Automatically copies shareable GitHub URLs to clipboard
+
 
 ## 🖼️ Perfect for:
 
