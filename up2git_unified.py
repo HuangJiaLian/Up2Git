@@ -97,6 +97,7 @@ class SettingsDialog(QDialog):
         self.settings = settings
         self.setWindowTitle("Up2Git Settings")
         self.setModal(True)
+        self.resize(650, 240)  # Increased width to 650px and height to 240px
         self.setup_ui()
     
     def setup_ui(self):
@@ -220,20 +221,20 @@ class Up2GitApp:
         # Create context menu
         menu = QMenu()
         
-        upload_clipboard_action = menu.addAction("📋 Upload from Clipboard")
+        upload_clipboard_action = menu.addAction("Upload from Clipboard")
         upload_clipboard_action.triggered.connect(self.upload_from_clipboard)
         
-        upload_file_action = menu.addAction("📁 Upload File...")
+        upload_file_action = menu.addAction("Upload File...")
         upload_file_action.triggered.connect(self.upload_file_dialog)
         
         menu.addSeparator()
         
-        settings_action = menu.addAction("⚙️ Settings...")
+        settings_action = menu.addAction("Settings...")
         settings_action.triggered.connect(self.show_settings)
         
         menu.addSeparator()
         
-        quit_action = menu.addAction("❌ Quit")
+        quit_action = menu.addAction("Quit")
         quit_action.triggered.connect(self.app.quit)
         
         self.tray_icon.setContextMenu(menu)
@@ -247,17 +248,21 @@ class Up2GitApp:
         try:
             # Get the directory where this script is located
             script_dir = os.path.dirname(os.path.abspath(__file__))
-            icon_path = os.path.join(script_dir, "icons", "icon_cloud_upload.png")
+            icon_path = os.path.join(script_dir, "icons", "icon_variant2_improved.svg")
             
             if os.path.exists(icon_path):
                 with open(icon_path, 'rb') as f:
                     return f.read()
             else:
-                # Try alternative paths
+                # Try alternative paths including PNG fallback
                 alt_paths = [
-                    os.path.join(script_dir, "icon_cloud_upload.png"),
-                    os.path.join(os.getcwd(), "icons", "icon_cloud_upload.png"),
-                    os.path.join(os.getcwd(), "icon_cloud_upload.png")
+                    os.path.join(script_dir, "icons", "icon_variant2.svg"),
+                    os.path.join(script_dir, "icons", "icon_variant2.png"),
+                    os.path.join(script_dir, "icon_variant2_improved.svg"),
+                    os.path.join(os.getcwd(), "icons", "icon_variant2_improved.svg"),
+                    os.path.join(os.getcwd(), "icon_variant2_improved.svg"),
+                    # Fallback to old icon if variant2 not found
+                    os.path.join(script_dir, "icons", "icon_cloud_upload.png")
                 ]
                 
                 for path in alt_paths:
@@ -397,7 +402,7 @@ class Up2GitApp:
         pyperclip.copy(url)
         
         # Show notification
-        self.show_message("Success", f"File uploaded! URL copied to clipboard:\n{url}")
+        self.show_message("Success", f"✅ Uploaded! URL copied:\n{url}")
     
     def upload_error(self, error):
         """Handle upload error"""
