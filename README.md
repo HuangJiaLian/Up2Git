@@ -1,7 +1,7 @@
 # Up2Git - GitHub File Uploader
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/HuangJiaLian/Up2Git/main/icon_variant2_improved.svg" alt="Up2Git Logo" width="128" height="128">
+  <img src="https://raw.githubusercontent.com/HuangJiaLian/Up2Git/refs/heads/main/icons/icon_variant2_improved.svg" alt="Up2Git Logo" width="128" height="128">
 </p>
 
 <p align="center">
