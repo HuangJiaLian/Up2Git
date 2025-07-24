@@ -248,20 +248,23 @@ class Up2GitApp:
         try:
             # Get the directory where this script is located
             script_dir = os.path.dirname(os.path.abspath(__file__))
-            icon_path = os.path.join(script_dir, "icons", "icon_variant2_improved.svg")
+            # Use the main icon with transparent background
+            icon_path = os.path.join(script_dir, "icons", "icon.svg")
             
             if os.path.exists(icon_path):
                 with open(icon_path, 'rb') as f:
                     return f.read()
             else:
-                # Try alternative paths including PNG fallback
+                # Try alternative paths including fallbacks
                 alt_paths = [
+                    os.path.join(script_dir, "icons", "icon_variant2_improved.svg"),
+                    os.path.join(script_dir, "icons", "icon_variant2_improved.png"),
                     os.path.join(script_dir, "icons", "icon_variant2.svg"),
                     os.path.join(script_dir, "icons", "icon_variant2.png"),
-                    os.path.join(script_dir, "icon_variant2_improved.svg"),
-                    os.path.join(os.getcwd(), "icons", "icon_variant2_improved.svg"),
-                    os.path.join(os.getcwd(), "icon_variant2_improved.svg"),
-                    # Fallback to old icon if variant2 not found
+                    os.path.join(script_dir, "icon.svg"),
+                    os.path.join(os.getcwd(), "icons", "icon.svg"),
+                    os.path.join(os.getcwd(), "icon.svg"),
+                    # Fallback to old icon if nothing found
                     os.path.join(script_dir, "icons", "icon_cloud_upload.png")
                 ]
                 

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="125.28pt"
+   height="125.28pt"
+   viewBox="0 0 125.28 125.28"
+   version="1.1"
+   id="svg39"
+   sodipodi:docname="icon_variant2_improved.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview41"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="2.5471057"
+     inkscape:cx="73.024061"
+     inkscape:cy="85.194737"
+     inkscape:window-width="1280"
+     inkscape:window-height="728"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="axes_1" />
+  <metadata
+     id="metadata2">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:date>2025-07-24T11:40:00.000000</dc:date>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Up2Git Improved Icon</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6">
+    <style
+       type="text/css"
+       id="style4">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+  </defs>
+  <g
+     id="figure_1">
+    <g
+       id="patch_1">
+      <path
+         d="M 0 125.28  L 125.28 125.28  L 125.28 0  L 0 0  L 0 125.28  z "
+         style="fill: none"
+         id="path8" />
+    </g>
+    <g
+       id="axes_1">
+      <!-- Main circle background - lighter color -->
+      <g
+         id="patch_2">
+        <path
+           d="M 62.64 113.04  C 76.006236 113.04 88.826825 107.729538 98.278182 98.278182  C 107.729538 88.826825 113.04 76.006236 113.04 62.64  C 113.04 49.273764 107.729538 36.453175 98.278182 27.001818  C 88.826825 17.550462 76.006236 12.24 62.64 12.24  C 49.273764 12.24 36.453175 17.550462 27.001818 27.001818  C 17.550462 36.453175 12.24 49.273764 12.24 62.64  C 12.24 76.006236 17.550462 88.826825 27.001818 98.278182  C 36.453175 107.729538 49.273764 113.04 62.64 113.04  z "
+           clip-path="url(#pcab0275d25)"
+           style="fill: #555753; stroke: #555753; stroke-linejoin: miter"
+           id="path11" />
+      </g>
+      <!-- Teal accent section -->
+      <g
+         id="patch_3">
+        <path
+           d="M 113.04 62.64  C 113.04 49.278215 107.72639 36.450027 98.278182 27.001818  C 88.829973 17.55361 76.001785 12.24 62.64 12.24  C 49.278215 12.24 36.450027 17.55361 27.001818 27.001818  C 17.55361 36.450027 12.24 49.278215 12.24 62.64  L 62.64 62.64  L 113.04 62.64  z "
+           clip-path="url(#pcab0275d25)"
+           style="fill: #48a9a6; stroke: #48a9a6; stroke-linejoin: miter"
+           id="path14" />
+      </g>
+      <!-- Top circle (plus symbol) - larger -->
+      <!-- Bottom circle (arrow background) - larger -->
+      <g
+         id="patch_5">
+        <path
+           d="M 62.64 101.808  C 66.205494 101.808 69.606145 100.356571 72.128712 97.833904  C 74.651279 95.311337 76.104 91.910686 76.104 88.344  C 76.104 84.777314 74.651279 81.376663 72.128712 78.854096  C 69.606145 76.331529 66.205494 74.88 62.64 74.88  C 59.074506 74.88 55.673855 76.331529 53.151288 78.854096  C 50.628721 81.376663 49.176 84.777314 49.176 88.344  C 49.176 91.910686 50.628721 95.311337 53.151288 97.833904  C 55.673855 100.356571 59.074506 101.808 62.64 101.808  z "
+           clip-path="url(#pcab0275d25)"
+           style="fill: #555753"
+           id="path20" />
+      </g>
+      <!-- Upload arrow - larger -->
+      <g
+         id="patch_6"
+         transform="matrix(1.7297067,0,0,2.6493367,-45.708828,-139.45933)">
+        <path
+           d="m 62.64,78.12 -5.04,6.552 h 3.024 v 9.36 h 4.032 v -9.36 h 3.024 z"
+           clip-path="url(#pcab0275d25)"
+           style="fill:#48a9a6"
+           id="path23" />
+      </g>
+      <!-- Plus symbol horizontal line - thicker and longer -->
+      <!-- Plus symbol vertical line - thicker and longer -->
+      <g
+         id="g207"
+         transform="matrix(1.2929167,0,0,1.2929167,-18.348302,-10.357071)">
+        <g
+           id="patch_4">
+          <path
+             d="m 62.64,50.4 c 3.565494,0 6.966145,-1.451429 9.488712,-3.974096 C 74.651279,43.903337 76.104,40.502686 76.104,36.936 c 0,-3.566686 -1.452721,-6.967337 -3.975288,-9.489904 C 69.606145,24.923529 66.205494,23.472 62.64,23.472 c -3.565494,0 -6.966145,1.451529 -9.488712,3.974096 C 50.628721,29.968663 49.176,33.369314 49.176,36.936 c 0,3.566686 1.452721,6.967337 3.975288,9.489904 C 55.673855,48.948571 59.074506,50.4 62.64,50.4 Z"
+             clip-path="url(#pcab0275d25)"
+             style="fill:#ffffff;stroke:#555753;stroke-width:2.5;stroke-linejoin:miter"
+             id="path17" />
+        </g>
+        <g
+           id="line2d_1">
+          <path
+             d="M 57.6,36.936 H 67.68"
+             clip-path="url(#pcab0275d25)"
+             style="fill:none;stroke:#555753;stroke-width:3;stroke-linecap:square"
+             id="path26" />
+        </g>
+        <g
+           id="line2d_2">
+          <path
+             d="M 62.64,41.976 V 31.896"
+             clip-path="url(#pcab0275d25)"
+             style="fill:none;stroke:#555753;stroke-width:3;stroke-linecap:square"
+             id="path29" />
+        </g>
+      </g>
+    </g>
+  </g>
+  <defs
+     id="defs37">
+    <clipPath
+       id="pcab0275d25">
+      <rect
+         x="7.2"
+         y="7.2"
+         width="110.88"
+         height="110.88"
+         id="rect34" />
+    </clipPath>
+  </defs>
+</svg>
