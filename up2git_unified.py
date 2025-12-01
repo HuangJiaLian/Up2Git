@@ -330,8 +330,9 @@ class Up2GitApp:
         
         # Get clipboard content
         clipboard = QApplication.clipboard()
+        mime_data = clipboard.mimeData()
         
-        # Try to get image from clipboard
+        # Try to get image from clipboard first
         pixmap = clipboard.pixmap()
         if not pixmap.isNull():
             print("Found image in clipboard")
@@ -348,10 +349,49 @@ class Up2GitApp:
             
             print(f"Uploading image: {filename}")
             self.upload_content(filename, content)
-        else:
-            # Try text content
-            text = clipboard.text()
-            if text:
+        elif mime_data.hasUrls():
+            # Handle files copied from file manager (e.g., Ctrl+C on a file)
+            urls = mime_data.urls()
+            if urls:
+                file_url = urls[0]
+                if file_url.isLocalFile():
+                    local_path = file_url.toLocalFile()
+                    print(f"Found file URL in clipboard: {local_path}")
+                    if os.path.isfile(local_path):
+                        try:
+                            with open(local_path, 'rb') as f:
+                                content = f.read()
+                            filename = os.path.basename(local_path)
+                            print(f"Uploading file: {filename}")
+                            self.upload_content(filename, content)
+                        except Exception as e:
+                            print(f"Error reading file: {e}")
+                            self.show_message("Error", f"Failed to read file: {e}")
+                    else:
+                        print(f"File not found: {local_path}")
+                        self.show_message("Error", f"File not found: {local_path}")
+                else:
+                    print("Only local files are supported")
+                    self.show_message("Error", "Only local files are supported!")
+            else:
+                print("No valid file URL in clipboard")
+                self.show_message("Error", "No valid file URL in clipboard!")
+        elif mime_data.hasText():
+            # Try text content (fallback for plain text paths)
+            text = clipboard.text().strip()
+            if os.path.isfile(text):
+                # It's a file path as plain text
+                print(f"Found file path in clipboard: {text}")
+                try:
+                    with open(text, 'rb') as f:
+                        content = f.read()
+                    filename = os.path.basename(text)
+                    print(f"Uploading file: {filename}")
+                    self.upload_content(filename, content)
+                except Exception as e:
+                    print(f"Error reading file: {e}")
+                    self.show_message("Error", f"Failed to read file: {e}")
+            else:
                 print(f"Found text in clipboard: {len(text)} characters")
                 # Save as text file
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -359,9 +399,9 @@ class Up2GitApp:
                 content = text.encode('utf-8')
                 print(f"Uploading text: {filename}")
                 self.upload_content(filename, content)
-            else:
-                print("No image or text found in clipboard")
-                self.show_message("Info", "No image or text found in clipboard")
+        else:
+            print("No image, file, or text found in clipboard")
+            self.show_message("Info", "No image, file, or text found in clipboard")
     
     def upload_file_dialog(self):
         """Show file dialog and upload selected file"""
