@@ -361,7 +361,10 @@ class Up2GitApp:
                         try:
                             with open(local_path, 'rb') as f:
                                 content = f.read()
-                            filename = os.path.basename(local_path)
+                            # Add timestamp prefix to filename
+                            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                            original_filename = os.path.basename(local_path)
+                            filename = f"{timestamp}_{original_filename}"
                             print(f"Uploading file: {filename}")
                             self.upload_content(filename, content)
                         except Exception as e:
