@@ -228,8 +228,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - GitHub API integration
 - Inspired by the need for quick file sharing in documentation workflows
 
----
 
-<p align="center">
+<p align="left">
   Made with ❤️ for the Linux community
 </p>
