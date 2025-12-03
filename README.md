@@ -5,7 +5,10 @@
 </p>
 
 <p align="left">
-  <strong>A lightweight system tray application for Linux that provides seamless file and clipboard content uploads to GitHub repositories.</strong>
+  <strong>A lightweight system tray application for Linux that provides seamless file and clipboard content uploads to GitHub repositories.</strong> 
+  <img src="https://img.shields.io/badge/platform-Linux-blue" alt="Platform: Linux">
+  <img src="https://img.shields.io/badge/python-3.11+-green" alt="Python 3.11+">
+  <img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT">
 </p>
 
 <p align="left">
