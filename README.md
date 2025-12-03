@@ -1,4 +1,4 @@
-# Up2Git - Upload files to GitHub
+# Up2Git - Upload a file to GitHub, return the remote link
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/HuangJiaLian/Up2Git/refs/heads/main/icons/icon.svg" alt="Up2Git Logo" width="128" height="128">
@@ -11,7 +11,6 @@
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT">
 </p>
 
----
 
 ## Features
 
@@ -224,7 +223,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - Built with [PyQt5](https://www.riverbankcomputing.com/software/pyqt/) for the GUI
-- Icons created with [Pillow](https://python-pillow.org/)
+- Icons created with [Inkscape](https://inkscape.org/)
 - GitHub API integration
 - Inspired by the need for quick file sharing in documentation workflows
 
