@@ -4,11 +4,11 @@
   <img src="https://raw.githubusercontent.com/HuangJiaLian/Up2Git/refs/heads/main/icons/icon.svg" alt="Up2Git Logo" width="128" height="128">
 </p>
 
-<p align="center">
+<p align="left">
   <strong>A lightweight system tray application for Linux that provides seamless file and clipboard content uploads to GitHub repositories.</strong>
 </p>
 
-<p align="center">
+<p align="left">
   <img src="https://img.shields.io/badge/platform-Linux-blue" alt="Platform: Linux">
   <img src="https://img.shields.io/badge/python-3.11+-green" alt="Python 3.11+">
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT">
