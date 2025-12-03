@@ -1,4 +1,4 @@
-# Up2Git - GitHub File Uploader
+# Up2Git - Upload files to GitHub
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/HuangJiaLian/Up2Git/refs/heads/main/icons/icon.svg" alt="Up2Git Logo" width="128" height="128">
