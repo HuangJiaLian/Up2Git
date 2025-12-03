@@ -11,12 +11,6 @@
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT">
 </p>
 
-<p align="left">
-  <img src="https://img.shields.io/badge/platform-Linux-blue" alt="Platform: Linux">
-  <img src="https://img.shields.io/badge/python-3.11+-green" alt="Python 3.11+">
-  <img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT">
-</p>
-
 ---
 
 ## Features
