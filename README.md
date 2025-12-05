@@ -37,6 +37,16 @@ sudo dpkg -i up2git_1.0.0_amd64.deb
 
 The URL is automatically copied to your clipboard!
 
+## Build from Source
+
+```bash
+git clone https://github.com/HuangJiaLian/Up2Git.git
+cd Up2Git
+conda create -n up2git python=3.11 && conda activate up2git
+pip install -r requirements.txt
+./build_deb.sh
+```
+
 ## License
 
 MIT
