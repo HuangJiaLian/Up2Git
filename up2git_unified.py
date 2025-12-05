@@ -8,7 +8,12 @@ import os
 import sys
 import base64
 import time
+import json
 from datetime import datetime
+from pathlib import Path
+
+# Suppress Qt session management warning
+os.environ['SESSION_MANAGER'] = ''
 
 # GUI and system libraries
 try:
@@ -17,9 +22,10 @@ try:
     from PIL import Image
     from PyQt5.QtWidgets import (QApplication, QSystemTrayIcon, QMenu, QMessageBox, 
                                 QFileDialog, QDialog, QVBoxLayout, QLineEdit, 
-                                QFormLayout, QPushButton, QLabel, QHBoxLayout)
-    from PyQt5.QtCore import QThread, pyqtSignal, Qt, QTimer, QFileSystemWatcher
-    from PyQt5.QtGui import QIcon, QPixmap
+                                QFormLayout, QPushButton, QLabel, QHBoxLayout,
+                                QWidget, QGridLayout, QWidgetAction, QFrame)
+    from PyQt5.QtCore import QThread, pyqtSignal, Qt, QTimer, QFileSystemWatcher, QSize, QByteArray
+    from PyQt5.QtGui import QIcon, QPixmap, QImage, QCursor
     from plyer import notification
     from dotenv import load_dotenv
     DEPENDENCIES_AVAILABLE = True
@@ -140,30 +146,132 @@ class SettingsDialog(QDialog):
         self.settings['repo'] = self.repo_input.text()
         self.settings['folder'] = self.folder_input.text()
         self.settings['branch'] = self.branch_input.text()
+        
+        # Persist settings to config file
+        self._save_to_file()
         self.accept()
+    
+    def _save_to_file(self):
+        """Save settings to persistent config file"""
+        import pathlib
+        
+        # Use XDG config directory for proper Linux standards
+        config_dir = pathlib.Path.home() / '.config' / 'up2git'
+        config_dir.mkdir(parents=True, exist_ok=True)
+        config_file = config_dir / 'config.env'
+        
+        with open(config_file, 'w') as f:
+            f.write(f"GITHUB_TOKEN={self.settings['token']}\n")
+            f.write(f"GITHUB_REPO={self.settings['repo']}\n")
+            f.write(f"UPLOAD_FOLDER={self.settings['folder']}\n")
+            f.write(f"BASE_BRANCH={self.settings['branch']}\n")
+        
+        print(f"Settings saved to: {config_file}")
 
 class Up2GitApp:
     """Main application class"""
+    
+    MAX_HISTORY_ITEMS = 10
     
     def __init__(self):
         self.app = QApplication(sys.argv)
         self.uploader = None
         self.tray_icon = None
+        self.history = []
         self.settings = self.load_settings()
+        self.load_history()
         self.setup_github_uploader()
         self.setup_tray()
         self.setup_file_watcher()
         self.setup_global_hotkey()
     
+    def get_history_file(self):
+        """Get the path to the history file"""
+        config_dir = Path.home() / '.config' / 'up2git'
+        config_dir.mkdir(parents=True, exist_ok=True)
+        return config_dir / 'history.json'
+    
+    def load_history(self):
+        """Load upload history from file"""
+        history_file = self.get_history_file()
+        try:
+            if history_file.exists():
+                with open(history_file, 'r') as f:
+                    self.history = json.load(f)
+                print(f"Loaded {len(self.history)} history items")
+        except Exception as e:
+            print(f"Error loading history: {e}")
+            self.history = []
+    
+    def save_history(self):
+        """Save upload history to file"""
+        history_file = self.get_history_file()
+        try:
+            with open(history_file, 'w') as f:
+                json.dump(self.history, f, indent=2)
+        except Exception as e:
+            print(f"Error saving history: {e}")
+    
+    def add_to_history(self, filename, url, thumbnail_data=None):
+        """Add an upload to history"""
+        entry = {
+            'filename': filename,
+            'url': url,
+            'timestamp': datetime.now().isoformat(),
+            'is_image': filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp')),
+            'thumbnail': thumbnail_data  # Base64 encoded thumbnail for images
+        }
+        
+        # Add to beginning of list
+        self.history.insert(0, entry)
+        
+        # Keep only MAX_HISTORY_ITEMS
+        if len(self.history) > self.MAX_HISTORY_ITEMS:
+            self.history = self.history[:self.MAX_HISTORY_ITEMS]
+        
+        self.save_history()
+        self.update_history_menu()
+    
+    def create_thumbnail(self, image_data, size=64):
+        """Create a thumbnail from image data, returns base64 encoded PNG"""
+        try:
+            from io import BytesIO
+            img = Image.open(BytesIO(image_data))
+            img.thumbnail((size, size), Image.Resampling.LANCZOS)
+            
+            # Convert to RGB if necessary (for PNG with transparency)
+            if img.mode in ('RGBA', 'LA', 'P'):
+                background = Image.new('RGB', img.size, (255, 255, 255))
+                if img.mode == 'P':
+                    img = img.convert('RGBA')
+                background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
+                img = background
+            
+            # Save to bytes
+            buffer = BytesIO()
+            img.save(buffer, format='PNG')
+            return base64.b64encode(buffer.getvalue()).decode('utf-8')
+        except Exception as e:
+            print(f"Error creating thumbnail: {e}")
+            return None
+    
     def load_settings(self):
-        """Load settings from environment variables or .env file"""
-        # Try to load from .env file
-        env_path = '.env'
-        if os.path.exists(env_path):
-            load_dotenv(env_path)
-            print(f"Loaded .env from: {env_path}")
+        """Load settings from config file or environment variables"""
+        import pathlib
+        
+        # First, try to load from user config file (~/.config/up2git/config.env)
+        config_file = pathlib.Path.home() / '.config' / 'up2git' / 'config.env'
+        if config_file.exists():
+            load_dotenv(str(config_file))
+            print(f"Loaded config from: {config_file}")
         else:
-            print(f"No .env file found at: {os.path.abspath(env_path)}")
+            # Fallback to .env file in current directory
+            env_path = '.env'
+            if os.path.exists(env_path):
+                load_dotenv(env_path)
+                print(f"Loaded .env from: {env_path}")
+            else:
+                print(f"No config file found. Settings dialog will open.")
         
         # Get settings from environment
         settings = {
@@ -219,29 +327,96 @@ class Up2GitApp:
         self.tray_icon = QSystemTrayIcon(icon, self.app)
         
         # Create context menu
-        menu = QMenu()
+        self.menu = QMenu()
         
-        upload_clipboard_action = menu.addAction("Upload from Clipboard")
+        upload_clipboard_action = self.menu.addAction("Upload from Clipboard")
         upload_clipboard_action.triggered.connect(self.upload_from_clipboard)
         
-        upload_file_action = menu.addAction("Upload File...")
+        upload_file_action = self.menu.addAction("Upload File...")
         upload_file_action.triggered.connect(self.upload_file_dialog)
         
-        menu.addSeparator()
+        self.menu.addSeparator()
         
-        settings_action = menu.addAction("Settings...")
+        # History submenu
+        self.history_menu = self.menu.addMenu("Recent Uploads")
+        self.update_history_menu()
+        
+        self.menu.addSeparator()
+        
+        settings_action = self.menu.addAction("Settings...")
         settings_action.triggered.connect(self.show_settings)
         
-        menu.addSeparator()
+        self.menu.addSeparator()
         
-        quit_action = menu.addAction("Quit")
+        quit_action = self.menu.addAction("Quit")
         quit_action.triggered.connect(self.app.quit)
         
-        self.tray_icon.setContextMenu(menu)
+        self.tray_icon.setContextMenu(self.menu)
         self.tray_icon.show()
         
         # Set tooltip
         self.tray_icon.setToolTip("Up2Git - GitHub File Uploader")
+    
+    def update_history_menu(self):
+        """Update the history submenu with recent uploads"""
+        if not hasattr(self, 'history_menu'):
+            return
+        
+        self.history_menu.clear()
+        
+        if not self.history:
+            empty_action = self.history_menu.addAction("No recent uploads")
+            empty_action.setEnabled(False)
+            return
+        
+        # Create a widget for the grid layout
+        for i, entry in enumerate(self.history[:self.MAX_HISTORY_ITEMS]):
+            action = self.history_menu.addAction(self._create_history_icon(entry), 
+                                                  self._truncate_filename(entry['filename']))
+            action.setToolTip(f"{entry['filename']}\n{entry['url']}\n{entry['timestamp'][:10]}")
+            # Use lambda with default argument to capture the URL correctly
+            action.triggered.connect(lambda checked, url=entry['url']: self.copy_url_to_clipboard(url))
+        
+        # Add separator and clear option
+        self.history_menu.addSeparator()
+        clear_action = self.history_menu.addAction("Clear History")
+        clear_action.triggered.connect(self.clear_history)
+    
+    def _create_history_icon(self, entry):
+        """Create an icon for a history entry (thumbnail for images, file icon for others)"""
+        if entry.get('is_image') and entry.get('thumbnail'):
+            try:
+                # Decode base64 thumbnail
+                thumb_data = base64.b64decode(entry['thumbnail'])
+                pixmap = QPixmap()
+                pixmap.loadFromData(thumb_data)
+                if not pixmap.isNull():
+                    return QIcon(pixmap.scaled(32, 32, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            except Exception as e:
+                print(f"Error loading thumbnail: {e}")
+        
+        # Default file icon
+        pixmap = QPixmap(32, 32)
+        pixmap.fill(Qt.transparent)
+        return QIcon(pixmap)
+    
+    def _truncate_filename(self, filename, max_length=25):
+        """Truncate filename for display"""
+        if len(filename) <= max_length:
+            return filename
+        return filename[:max_length-3] + "..."
+    
+    def copy_url_to_clipboard(self, url):
+        """Copy URL to clipboard and show notification"""
+        pyperclip.copy(url)
+        self.show_message("Copied", "URL copied to clipboard")
+    
+    def clear_history(self):
+        """Clear upload history"""
+        self.history = []
+        self.save_history()
+        self.update_history_menu()
+        self.show_message("History", "Upload history cleared")
     
     def get_embedded_icon(self):
         """Get embedded icon data or load from file"""
@@ -344,7 +519,7 @@ class Up2GitApp:
             content = buffer.data().data()
             
             # Generate filename
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            timestamp = datetime.now().strftime("%y%m%d_%H%M%S")
             filename = f"screenshot_{timestamp}.png"
             
             print(f"Uploading image: {filename}")
@@ -362,7 +537,7 @@ class Up2GitApp:
                             with open(local_path, 'rb') as f:
                                 content = f.read()
                             # Add timestamp prefix to filename
-                            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                            timestamp = datetime.now().strftime("%y%m%d_%H%M%S")
                             original_filename = os.path.basename(local_path)
                             filename = f"{timestamp}_{original_filename}"
                             print(f"Uploading file: {filename}")
@@ -397,7 +572,7 @@ class Up2GitApp:
             else:
                 print(f"Found text in clipboard: {len(text)} characters")
                 # Save as text file
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                timestamp = datetime.now().strftime("%y%m%d_%H%M%S")
                 filename = f"text_{timestamp}.txt"
                 content = text.encode('utf-8')
                 print(f"Uploading text: {filename}")
@@ -432,26 +607,51 @@ class Up2GitApp:
     def upload_content(self, filename, content):
         """Upload content using worker thread"""
         folder = self.settings.get('folder', 'uploads')
+        print(f"upload_content called with filename: {filename}, content size: {len(content)}")
+        
+        # Store content info for history (after upload completes)
+        self._pending_upload = {
+            'filename': filename,
+            'content': content,
+            'is_image': filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp'))
+        }
         
         # Start upload in worker thread
         self.worker = UploadWorker(self.uploader, filename, content)
         self.worker.finished.connect(self.upload_finished)
         self.worker.error.connect(self.upload_error)
         self.worker.start()
+        print("Upload worker started")
         
         # Show uploading message
         # self.show_message("Uploading", f"Uploading {filename}...")
     
     def upload_finished(self, url):
         """Handle successful upload"""
+        print(f"upload_finished called with url: {url}")
+        
+        # Add to history
+        if hasattr(self, '_pending_upload') and self._pending_upload:
+            thumbnail = None
+            if self._pending_upload['is_image']:
+                thumbnail = self.create_thumbnail(self._pending_upload['content'])
+            
+            self.add_to_history(
+                self._pending_upload['filename'],
+                url,
+                thumbnail
+            )
+            self._pending_upload = None
+        
         # Copy URL to clipboard
         pyperclip.copy(url)
         
-        # Show notification
-        self.show_message("Success", f"✅ Uploaded! URL copied:\n{url}")
+        # Show notification (avoid newlines and special chars that crash notify-send)
+        self.show_message("Upload Success", "URL copied to clipboard")
     
     def upload_error(self, error):
         """Handle upload error"""
+        print(f"upload_error called: {error}")
         self.show_message("Error", f"Upload failed: {error}")
     
     def show_settings(self):
@@ -462,18 +662,31 @@ class Up2GitApp:
             self.show_message("Settings", "Settings saved successfully!")
     
     def show_message(self, title, message):
-        """Show notification message"""
+        """Show notification message using Qt tray icon (most reliable in bundled apps)"""
+        # Use Qt's built-in tray notification - works reliably in PyInstaller bundles
         try:
-            notification.notify(
-                title=title,
-                message=message,
-                app_name="Up2Git",
-                timeout=3
-            )
-        except:
-            # Fallback to tray message
             if self.tray_icon:
-                self.tray_icon.showMessage(title, message, QSystemTrayIcon.Information, 3000)
+                # Use NoIcon to avoid the default "i" icon, our tray icon will be shown
+                self.tray_icon.showMessage(title, message, QSystemTrayIcon.NoIcon, 5000)
+                print(f"Tray notification shown: {title}")
+                return
+        except Exception as e:
+            print(f"Tray message failed: {e}")
+        
+        # Fallback: try notify-send via subprocess (may crash in PyInstaller)
+        import subprocess
+        import shutil
+        
+        notify_send = shutil.which('notify-send') or '/usr/bin/notify-send'
+        try:
+            # Run in a separate process to avoid crashes affecting main app
+            subprocess.Popen(
+                [notify_send, title, message],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL
+            )
+        except Exception as e:
+            print(f"notify-send failed: {e}")
     
     def run(self):
         """Run the application"""
@@ -485,6 +698,29 @@ class Up2GitApp:
 
 def main():
     """Main entry point"""
+    # Handle --trigger flag (for keyboard shortcut integration)
+    if '--trigger' in sys.argv:
+        trigger_file = "/tmp/.upload_trigger"
+        try:
+            from pathlib import Path
+            Path(trigger_file).write_text(str(time.time()))
+            return 0
+        except Exception as e:
+            print(f"Error creating trigger: {e}")
+            return 1
+    
+    # Handle --help flag
+    if '--help' in sys.argv or '-h' in sys.argv:
+        print("Up2Git - GitHub File Uploader")
+        print()
+        print("Usage:")
+        print("  up2git           Start the system tray application")
+        print("  up2git --trigger Trigger upload from clipboard (for keyboard shortcuts)")
+        print("  up2git --help    Show this help message")
+        print()
+        print("Set your system keyboard shortcut to run: up2git --trigger")
+        return 0
+    
     # Check if dependencies are available
     if not DEPENDENCIES_AVAILABLE:
         print("Error: Required dependencies not available")
