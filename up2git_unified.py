@@ -440,7 +440,7 @@ class Up2GitApp:
         self.worker.start()
         
         # Show uploading message
-        self.show_message("Uploading", f"Uploading {filename}...")
+        # self.show_message("Uploading", f"Uploading {filename}...")
     
     def upload_finished(self, url):
         """Handle successful upload"""
